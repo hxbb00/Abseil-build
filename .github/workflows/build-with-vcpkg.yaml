@@ -13,6 +13,11 @@ jobs:
     name: build and test on windows
     runs-on: windows-latest
     steps:
+      - name: set release date
+        shell: bash
+        run: |
+          echo "RELEASE_DATE=$(date '+%Y%m%d%H%M%S')" >> ${GITHUB_ENV}
+          
       - name: Checkout abseil repository
         uses: actions/checkout@v4
         with:
@@ -30,5 +35,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: abseil_win_vcpkg_x86_64 
-          tag_name: ${{ env.GITHUB_SHA_SHORT }} 
+          tag_name: vcpkg_${{ env.RELEASE_DATE }}
           files: abseil_win_vcpkg_x86_64.zip
