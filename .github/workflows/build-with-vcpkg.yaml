@@ -24,7 +24,7 @@ jobs:
         run: |
           bootstrap-vcpkg.bat
           vcpkg install abseil --triplet x64-windows
-          7z a abseil_win_vcpkg_x86_64.zip installed\x64-windows
+          7z a abseil_win_vcpkg_x86_64.zip installed/x64-windows
 
       - name: Release
         uses: softprops/action-gh-release@v2
