@@ -19,9 +19,19 @@ jobs:
       - name: build
         run: |
           mkdir build && cd build
-          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 ..
+          mkdir _install
+          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=./_install ..
           cmake --build . --target all
-
+          cmake install
+          zip abseil_linux_x86_64.zip ./_install
+          
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: abseil_linux_x86_64 
+          tag_name: ${{ env.GITHUB_SHA_SHORT }} 
+          files: abseil_linux_x86_64.zip
+          
   macos:
     name: build and test on windows
     runs-on: windows-latest
@@ -36,5 +46,15 @@ jobs:
         shell: bash
         run: |
           mkdir build && cd build
-          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 ..
+          mkdir _install
+          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=./_install ..
           cmake --build . --target ALL_BUILD
+          cmake install
+          7z a abseil_win_x86_64.zip ./_install
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: abseil_win_x86_64 
+          tag_name: ${{ env.GITHUB_SHA_SHORT }} 
+          files: abseil_win_x86_64.zip
