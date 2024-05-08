@@ -2,6 +2,9 @@ name: Build
 on:
   workflow_dispatch:
   
+permissions:
+  contents: write
+  
 env:
   cache-version: v1.0.3
 
@@ -19,11 +22,11 @@ jobs:
       - name: build
         run: |
           mkdir build && cd build
-          mkdir _install
-          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=./_install ..
+          mkdir install
+          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=install ..
           cmake --build . --target all
           cmake install
-          zip abseil_linux_x86_64.zip ./_install
+          zip abseil_linux_x86_64.zip install
           
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -46,11 +49,11 @@ jobs:
         shell: bash
         run: |
           mkdir build && cd build
-          mkdir _install
-          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=./_install ..
+          mkdir install
+          cmake -DABSL_BUILD_TESTING=ON -DABSL_USE_GOOGLETEST_HEAD=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=install ..
           cmake --build . --target ALL_BUILD
           cmake install
-          7z a abseil_win_x86_64.zip ./_install
+          7z a abseil_win_x86_64.zip install
 
       - name: Release
         uses: softprops/action-gh-release@v2
