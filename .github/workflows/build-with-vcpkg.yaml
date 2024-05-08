@@ -1,0 +1,34 @@
+name: Build
+on:
+  workflow_dispatch:
+  
+permissions:
+  contents: write
+  
+env:
+  cache-version: v1.0.3
+
+jobs:
+  windows:
+    name: build and test on windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout abseil repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'microsoft/vcpkg'
+          fetch-depth: 0
+
+      - name: build
+        shell: bash
+        run: |
+          bootstrap-vcpkg.bat
+          vcpkg install abseil --triplet x64-windows
+          7z a abseil_win_vcpkg_x86_64.zip installed\x64-windows
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: abseil_win_vcpkg_x86_64 
+          tag_name: ${{ env.GITHUB_SHA_SHORT }} 
+          files: abseil_win_vcpkg_x86_64.zip
